@@ -1,0 +1,13 @@
+project
+	: requirements 
+	  <include>.
+	: default-build debug
+	: build-dir ../output/libmatroska
+	;
+
+lib libmatroska
+	: [ glob src/*.cpp ] ..//ebml_tag
+	: <link>static
+	:
+	: <include>.
+	;

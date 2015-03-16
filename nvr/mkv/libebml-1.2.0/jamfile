@@ -1,0 +1,13 @@
+project
+	: requirements 
+	  <include>.
+	: default-build debug
+	: build-dir ../output/libebml
+	;
+
+lib libebml
+	: [ glob src/*.cpp ]
+	: <link>static
+	:
+	: <include>.
+	;

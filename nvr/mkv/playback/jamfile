@@ -1,0 +1,26 @@
+project
+	: requirements 
+	  <include>.
+	: default-build debug
+	: build-dir ../output/playback
+	;
+
+import os ;
+
+if [ os.name ] = NT
+{
+}
+else
+{
+	BOOST_LIBRARY_LIST = boost_thread_tag ;
+}
+
+exe pbserver
+	: async_pb_server.cpp timestamp.cpp domain.cpp ..//libs $(BOOST_LIBRARY_LIST)
+	: <link>static
+	;
+
+lib boost_thread_tag
+	:
+	: <name>boost_thread-mt
+	;

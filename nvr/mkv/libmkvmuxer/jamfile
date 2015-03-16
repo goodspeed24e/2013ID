@@ -1,0 +1,24 @@
+project
+	: requirements 
+	  <include>.
+	: default-build debug
+	: build-dir ../output/libmkvmuxer
+	;
+
+lib libmkvmuxer
+	: muxerimpl.cpp mkvmuxer.cpp mkvdemuxer.cpp ..//matroska_tag ..//ebml_tag
+	: <link>static
+	:
+	: <include>.
+	  <library>..//boost_filesystem_tag
+	;
+
+exe idmuxer
+	: idmuxer.cpp ..//libs
+	: <link>static
+	;
+
+exe iddemuxer
+	: iddemuxer.cpp ..//libs
+	: <link>static
+	;

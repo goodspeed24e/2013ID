@@ -1,0 +1,14 @@
+project
+	: requirements 
+	  <include>.
+	: default-build debug
+	: build-dir ../output/librecorder
+	;
+
+lib librecorder
+	: streaming_media_recorder.cpp streaming_media_library.cpp ..//mkvmuxer_tag
+	: <link>static
+	:
+	: <include>.
+	  <library>..//boost_filesystem_tag
+	;

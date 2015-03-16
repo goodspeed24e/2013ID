@@ -1,0 +1,78 @@
+
+import os ;
+
+if [ os.name ] = NT
+{
+	BOOST_BUILD_PATH = [ os.environ BOOST_BUILD_PATH ] ;
+	BOOST_INCLUDE_PATH = $(BOOST_BUILD_PATH) ;
+	BOOST_LIBRARY_PATH = $(BOOST_BUILD_PATH)/stage/lib ;
+	BOOST_LIBRARY_PREFIX = lib ;
+	BOOST_LIBRARY_POSTFIX = -vc80-mt ;
+	BOOST_LIBRARY_POSTFIX_DEBUG = -vc80-mt-gd ;
+}
+else
+{
+	BOOST_INCLUDE_PATH = . ;
+	BOOST_LIBRARY_PATH = . ;
+	BOOST_LIBRARY_PREFIX = "" ;
+	BOOST_LIBRARY_POSTFIX = "" ;
+	BOOST_LIBRARY_POSTFIX_DEBUG = "" ;
+}
+
+project
+	: requirements 
+	  <toolset>msvc:<define>WIN32
+	  <toolset>msvc:<define>_CRT_SECURE_NO_DEPRECATE=1
+	  <toolset>msvc:<define>_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES=1
+	  <include>$(BOOST_INCLUDE_PATH)
+	: default-build debug
+	:
+	;
+
+build-project libebml-1.2.0 ;
+build-project libmatroska-1.1.0 ;
+build-project libmkvmuxer ;
+build-project librecorder ;
+build-project playback ;
+
+alias ebml_tag
+	: libebml-1.2.0//libebml
+	;
+
+alias matroska_tag
+	: libmatroska-1.1.0//libmatroska
+	;
+
+alias mkvmuxer_tag
+	: libmkvmuxer//libmkvmuxer
+	;
+
+alias recorder_tag
+	: librecorder//librecorder
+	;
+
+stage libs
+	: recorder_tag mkvmuxer_tag matroska_tag ebml_tag
+	: <variant>release:<location>lib
+	  <variant>debug:<location>lib_gd
+	;
+
+stage headers
+	: librecorder/streaming_media_library.hpp librecorder/streaming_media_recorder.hpp
+	  libmkvmuxer/muxer.hpp libmkvmuxer/demuxer.hpp
+	: <location>include
+	;
+
+lib boost_filesystem_tag
+	:
+	: <variant>debug
+	  <name>$(BOOST_LIBRARY_PREFIX)boost_filesystem$(BOOST_LIBRARY_POSTFIX_DEBUG)
+	  <search>$(BOOST_LIBRARY_PATH)
+	;
+
+lib boost_filesystem_tag
+	:
+	: <variant>release
+	  <name>$(BOOST_LIBRARY_PREFIX)boost_filesystem$(BOOST_LIBRARY_POSTFIX)
+	  <search>$(BOOST_LIBRARY_PATH)
+	;
